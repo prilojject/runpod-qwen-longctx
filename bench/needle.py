@@ -30,6 +30,9 @@ PLANS: dict[str, list[dict]] = {
     "p2-256k": [{"preset": "p2-24gb-35b-128k", "tokens": 2000, "depth": 0.5, "context": 262144}],
     "p2-fallback": [{"preset": "p2-24gb-35b-128k", "tokens": 2000, "depth": 0.5, "context": 262144,
                      "kv_cache_type": "f16"}],
+    "p2-256k-240k": [{"preset": "p2-24gb-35b-128k", "tokens": 240000, "depth": 0.5, "context": 262144}],
+    "p4-on-24gb": [{"preset": "p4-48gb-27b-256k", "tokens": 2000, "depth": 0.5}],
+    "p4-on-24gb-128k": [{"preset": "p4-48gb-27b-256k", "tokens": 126000, "depth": 0.5}],
     "p3": [{"preset": "p3-48gb-35b-256k", "tokens": 126000, "depth": d} for d in DEPTHS],
     "p3-240k": [{"preset": "p3-48gb-35b-256k", "tokens": 240000, "depth": 0.5}],
 }

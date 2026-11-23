@@ -1,0 +1,26 @@
+[
+ {
+  "turn": "turn1_new",
+  "cache_n": 0,
+  "prompt_n": 62870,
+  "prompt_ms": 9079.596,
+  "gpu": "NVIDIA GeForce RTX 4090",
+  "error": null
+ },
+ {
+  "turn": "turn2_append",
+  "cache_n": 62877,
+  "prompt_n": 21,
+  "prompt_ms": 148.486,
+  "gpu": "NVIDIA GeForce RTX 4090",
+  "error": null
+ },
+ {
+  "turn": "turn3_edit_middle",
+  "cache_n": 8,
+  "prompt_n": 62864,
+  "prompt_ms": 8723.037,
+  "gpu": "NVIDIA GeForce RTX 4090",
+  "error": null
+ }
+]

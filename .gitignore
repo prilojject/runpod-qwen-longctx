@@ -10,5 +10,4 @@ venv/
 secrets.json
 hf_token*
 *.gguf
-bench/raw/
 .DS_Store

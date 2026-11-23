@@ -110,6 +110,7 @@ def ensure_server(scfg: ServerConfig, warnings: list[str]) -> dict[str, Any]:
         info = ensure_model(scfg.model_repo, scfg.model_file, scfg.revision, scfg.sha256, scfg.size_bytes,
                             timeout_s=scfg.load_timeout_s, log=lambda m: log.info("%s", m))
         start_index = _RESTART_FROM.pop(scfg.key(), 0)
+        _SERVER.stop()  # free the old model first so the load peak is not inflated
         with VramPeak() as vp:
             _SERVER.load(info["path"], scfg.context, scfg.kv_cache_type, scfg.min_context, scfg.parallel,
                          deadline, key=scfg.key(), start_index=start_index)
