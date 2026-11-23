@@ -1,0 +1,6 @@
+{
+  "projectTitle": "Qwen Long Context 256K — Single GPU (Runpod)",
+  "description": "OpenAI-compatible Runpod Serverless worker for hybrid Qwen 3.5/3.6 with 128K-256K context on one 24/48 GB GPU, llama.cpp b12651, pinned GGUF presets, OOM auto-fit.",
+  "folders": ["src", ".runpod", "bench", "examples"],
+  "excludeFolders": ["tests", "bench/raw"]
+}

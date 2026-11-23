@@ -1,0 +1,14 @@
+# prilojject/runpod-qwen-longctx
+
+> OpenAI-compatible Runpod Serverless worker for hybrid Qwen models (Qwen3.5-9B, Qwen3.6-35B-A3B MoE, Qwen3.6-27B) with 128K–256K context on one 24 GB or 48 GB GPU. llama.cpp b12651 llama-server on loopback, pinned GGUF weights, tested presets, automatic OOM fallback.
+
+- Repository: https://github.com/prilojject/runpod-qwen-longctx
+- Image: ghcr.io/prilojject/runpod-qwen-longctx:v1.0.0
+- API: https://api.runpod.ai/v2/<ENDPOINT_ID>/openai/v1 (chat/completions, completions, models, streaming); native input {"messages": [...]} or {"prompt": "..."}
+- Presets (env PRESET): p1-24gb-9b-256k (default <40 GiB), p2-24gb-35b-128k, p3-48gb-35b-256k (default >=40 GiB), p4-48gb-27b-256k, p5-48gb-35b-q8-256k, smoke, custom
+- Every response has worker.effective_context, worker.kv_cache_type, worker.fallback_steps
+- Auto-fit: KV f16 -> q8_0 -> halve context down to MIN_CONTEXT (16384), max 6 attempts, then error OOM_MIN_CONTEXT
+- Measured (bench/results.md): RTX 4090 p1 128K TTFT ~17 s, p2 128K ~22 s; A40 p3 128K ~48 s, 247K ~128 s; needle found in every run
+- Weights: Apache-2.0 (Qwen), GGUF by Unsloth; downloaded at runtime by revision SHA + sha256, cached in /runpod-volume/qwen-longctx; no HF token
+- Thinking off by default (ENABLE_THINKING=false); text only
+- Licenses: worker MIT, llama.cpp MIT

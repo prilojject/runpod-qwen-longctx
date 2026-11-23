@@ -1,0 +1,15 @@
+{
+ "input": {
+  "openai_route": "/v1/chat/completions",
+  "openai_input": {
+   "model": "qwen-longctx",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Reply with the single word pong."
+    }
+   ],
+   "max_tokens": 8
+  }
+ }
+}

@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+title: runpod-qwen-longctx
+message: If you use this worker, please also cite Qwen and llama.cpp.
+type: software
+authors:
+  - name: prilojject
+license: MIT
+repository-code: https://github.com/prilojject/runpod-qwen-longctx
+references:
+  - type: software
+    title: llama.cpp
+    authors:
+      - name: ggml-org
+    repository-code: https://github.com/ggml-org/llama.cpp
+    license: MIT
+    notes: "Release b12651, commit f5e6915c28f10330885fcb9243a93ae98d3115ab"
+  - type: software
+    title: Qwen3.6
+    authors:
+      - name: Qwen Team, Alibaba Cloud
+    license: Apache-2.0

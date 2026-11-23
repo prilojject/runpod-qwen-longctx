@@ -1,0 +1,51 @@
+openapi: 3.0.3
+info:
+  title: Qwen Long Context 256K (Runpod Serverless)
+  version: 1.0.0
+  description: OpenAI-compatible routes exposed by Runpod at https://api.runpod.ai/v2/{endpoint_id}/openai/v1 for this worker.
+servers:
+  - url: https://api.runpod.ai/v2/{endpoint_id}/openai/v1
+    variables:
+      endpoint_id: {default: ENDPOINT_ID}
+security:
+  - bearer: []
+paths:
+  /chat/completions:
+    post:
+      summary: Chat completion (supports stream=true)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [messages]
+              properties:
+                model: {type: string, example: qwen-longctx}
+                messages: {type: array, items: {type: object}}
+                max_tokens: {type: integer}
+                temperature: {type: number}
+                stream: {type: boolean}
+                chat_template_kwargs:
+                  type: object
+                  properties: {enable_thinking: {type: boolean}}
+      responses:
+        "200": {description: OpenAI chat.completion plus a worker block (effective_context, kv_cache_type, fallback_steps)}
+  /completions:
+    post:
+      summary: Text completion
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {type: object, required: [prompt], properties: {prompt: {type: string}, max_tokens: {type: integer}}}
+      responses:
+        "200": {description: OpenAI text_completion plus worker block}
+  /models:
+    get:
+      summary: List the served model (id qwen-longctx)
+      responses:
+        "200": {description: Model list}
+components:
+  securitySchemes:
+    bearer: {type: http, scheme: bearer}

@@ -1,0 +1,6 @@
+{
+ "input": {
+  "dry_run": true,
+  "preset": "p3-48gb-35b-256k"
+ }
+}

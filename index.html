@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Qwen Long Context 256K — Single GPU (Runpod)</title>
+  <style>
+    body { font-family: sans-serif; max-width: 48rem; margin: 3rem auto; padding: 0 1rem; line-height: 1.5; color: #0f172a; }
+    a { color: #0369a1; }
+    table { border-collapse: collapse; } td, th { border: 1px solid #cbd5e1; padding: .25rem .5rem; }
+  </style>
+</head>
+<body>
+  <h1>Qwen Long Context 256K — Single GPU</h1>
+  <p>OpenAI-compatible Runpod Serverless worker for hybrid Qwen models (Qwen3.5-9B, Qwen3.6-35B-A3B, Qwen3.6-27B) with 128K–256K context on one 24 GB or 48 GB GPU. llama.cpp with pinned GGUF weights, tested presets and automatic context fitting.</p>
+  <table>
+    <tr><th>GPU</th><th>Preset</th><th>Prompt</th><th>Needle</th><th>TTFT</th></tr>
+    <tr><td>RTX 4090</td><td>9B Q8_0, 256K</td><td>~128K</td><td>3/3</td><td>~17 s</td></tr>
+    <tr><td>RTX 4090</td><td>35B-A3B IQ4_XS, 128K</td><td>~128K</td><td>3/3</td><td>~22 s</td></tr>
+    <tr><td>A40 48 GB</td><td>35B-A3B Q6_K, 256K</td><td>~247K</td><td>1/1</td><td>~128 s</td></tr>
+  </table>
+  <p><a href="https://github.com/prilojject/runpod-qwen-longctx">GitHub repository</a> · <a href="https://github.com/prilojject/runpod-qwen-longctx/blob/main/README.md">README</a> · <a href="https://github.com/prilojject/runpod-qwen-longctx/blob/main/bench/results.md">Benchmarks</a></p>
+  <p>Weights by Qwen (Alibaba Cloud), Apache-2.0; GGUF by Unsloth, Apache-2.0. Inference by llama.cpp (MIT). Worker code MIT.</p>
+</body>
+</html>
