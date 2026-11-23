@@ -1,0 +1,16 @@
+prilojject/runpod-qwen-longctx
+Worker code: MIT (see LICENSE).
+
+Third-party components
+- llama.cpp (ggml-org/llama.cpp), MIT. Prebuilt release b12651
+  (commit f5e6915c28f10330885fcb9243a93ae98d3115ab), archive
+  llama-b12651-bin-ubuntu-cuda-12.8-x64.tar.gz, sha256
+  cb099350c6a025e67eefaa13f2b67b2dcce53e38a0da22476e070d166ef367ea.
+  License text: LICENSE.llama.cpp (also shipped at /opt/llama.cpp/LICENSE in the image).
+- NVIDIA CUDA runtime base image nvidia/cuda:12.8.2-runtime-ubuntu24.04, under the
+  NVIDIA Deep Learning Container License / CUDA EULA.
+
+Model weights (downloaded at runtime, not redistributed in the image)
+- Qwen3.5-9B, Qwen3.6-35B-A3B, Qwen3.6-27B by Qwen (Alibaba Cloud), Apache-2.0.
+- GGUF quantizations by Unsloth (unsloth/Qwen3.5-9B-GGUF, unsloth/Qwen3.6-35B-A3B-GGUF,
+  unsloth/Qwen3.6-27B-GGUF), Apache-2.0. Pinned revisions and sha256 in src/presets.py.

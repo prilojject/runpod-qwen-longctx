@@ -1,0 +1,14 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+.env
+.env.*
+*.pem
+*.key
+secrets.json
+hf_token*
+*.gguf
+bench/raw/
+.DS_Store

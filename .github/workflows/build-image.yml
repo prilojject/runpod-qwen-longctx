@@ -1,0 +1,53 @@
+name: build-image
+
+# Builds the worker image on GitHub's runner and pushes it to GHCR.
+# Never built locally. Manual trigger only, so every image is deliberate.
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Image tag (e.g. v1.0.0)"
+        required: true
+        default: "v1.0.0"
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Unit tests (no GPU)
+        run: |
+          python3 -m pip install --quiet -r requirements.txt -r requirements-dev.txt
+          python3 -m pytest -q tests
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - id: build
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile
+          platforms: linux/amd64
+          push: true
+          provenance: false
+          sbom: false
+          outputs: type=registry,oci-mediatypes=false
+          tags: |
+            ghcr.io/${{ github.repository }}:${{ inputs.tag }}
+          labels: |
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}
+            org.opencontainers.image.description=Hybrid Qwen long context (128K-256K) on one 24/48 GB GPU, llama.cpp b12651
+            org.opencontainers.image.licenses=MIT
+            org.opencontainers.image.revision=${{ github.sha }}
+      - name: Summary
+        run: |
+          echo "image: ghcr.io/${{ github.repository }}:${{ inputs.tag }}" | tee -a "$GITHUB_STEP_SUMMARY"
+          echo "digest: ${{ steps.build.outputs.digest }}" | tee -a "$GITHUB_STEP_SUMMARY"

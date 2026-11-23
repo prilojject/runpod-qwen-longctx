@@ -1,0 +1,228 @@
+{
+  "title": "Qwen Long Context 256K — Single GPU",
+  "description": "OpenAI-compatible serverless endpoint for hybrid Qwen models (Qwen3.5-9B, Qwen3.6-35B-A3B, Qwen3.6-27B) with 128K–256K context on a single 24 GB or 48 GB GPU. Built on llama.cpp with pinned GGUF weights and ready-made presets; if a context does not fit, the worker steps it down automatically instead of crashing. Apache-2.0 weights, no HF token needed.",
+  "type": "serverless",
+  "category": "language",
+  "iconUrl": "https://raw.githubusercontent.com/prilojject/runpod-qwen-longctx/main/.runpod/icon.png",
+  "config": {
+    "runsOn": "GPU",
+    "containerDiskInGb": 60,
+    "gpuCount": 1,
+    "gpuIds": "ADA_24,AMPERE_24,ADA_48_PRO,AMPERE_48,-NVIDIA RTX PRO 6000 Blackwell Server Edition MIG 1g.24gb,-NVIDIA RTX PRO 6000 Blackwell Server Edition MIG 2g.48gb,-NVIDIA B200,-NVIDIA B300 SXM6 AC",
+    "allowedCudaVersions": [
+      "13.4",
+      "13.3",
+      "13.2",
+      "13.1",
+      "13.0",
+      "12.9",
+      "12.8"
+    ],
+    "presets": [
+      {
+        "name": "24 GB · Qwen3.5-9B · 256K context",
+        "defaults": {
+          "PRESET": "p1-24gb-9b-256k"
+        }
+      },
+      {
+        "name": "24 GB · Qwen3.6-35B-A3B · 128K context",
+        "defaults": {
+          "PRESET": "p2-24gb-35b-128k"
+        }
+      },
+      {
+        "name": "48 GB · Qwen3.6-35B-A3B · 256K context",
+        "defaults": {
+          "PRESET": "p3-48gb-35b-256k"
+        }
+      },
+      {
+        "name": "48 GB · Qwen3.6-27B dense · 256K context",
+        "defaults": {
+          "PRESET": "p4-48gb-27b-256k"
+        }
+      },
+      {
+        "name": "Quick test (9B Q4, 16K)",
+        "defaults": {
+          "PRESET": "smoke"
+        }
+      }
+    ],
+    "env": [
+      {
+        "key": "PRESET",
+        "input": {
+          "name": "Preset",
+          "type": "string",
+          "default": "auto",
+          "description": "Model + context + KV cache bundle. 'auto' picks the 9B 256K preset on <40 GB GPUs and the 35B-A3B 256K preset on 48 GB GPUs. 'custom' uses MODEL_REPO/MODEL_FILE/MODEL_REVISION.",
+          "options": [
+            {
+              "label": "Auto (by GPU memory)",
+              "value": "auto"
+            },
+            {
+              "label": "24 GB · Qwen3.5-9B Q8_0 · 256K · KV f16",
+              "value": "p1-24gb-9b-256k"
+            },
+            {
+              "label": "24 GB · Qwen3.6-35B-A3B IQ4_XS · 128K · KV q8_0",
+              "value": "p2-24gb-35b-128k"
+            },
+            {
+              "label": "48 GB · Qwen3.6-35B-A3B Q6_K · 256K · KV f16",
+              "value": "p3-48gb-35b-256k"
+            },
+            {
+              "label": "48 GB · Qwen3.6-27B Q5_K_XL · 256K · KV f16",
+              "value": "p4-48gb-27b-256k"
+            },
+            {
+              "label": "48 GB · Qwen3.6-35B-A3B Q8_0 · 256K · KV q8_0 (not benchmarked)",
+              "value": "p5-48gb-35b-q8-256k"
+            },
+            {
+              "label": "Quick test (9B Q4_K_M, 16K)",
+              "value": "smoke"
+            },
+            {
+              "label": "Custom GGUF",
+              "value": "custom"
+            }
+          ]
+        }
+      },
+      {
+        "key": "CONTEXT",
+        "input": {
+          "name": "Context length",
+          "type": "string",
+          "default": "",
+          "description": "Target context in tokens (e.g. 131072). Empty = preset value. 'auto' = largest that fits (llama.cpp --fit). Capped at the model's 262144. If it does not fit, the worker steps down automatically.",
+          "advanced": false
+        }
+      },
+      {
+        "key": "MIN_CONTEXT",
+        "input": {
+          "name": "Minimum context",
+          "type": "number",
+          "default": 16384,
+          "description": "Auto-fit never goes below this. If even this does not fit, the worker returns OOM_MIN_CONTEXT instead of looping.",
+          "advanced": true
+        }
+      },
+      {
+        "key": "KV_CACHE_TYPE",
+        "input": {
+          "name": "KV cache precision",
+          "type": "string",
+          "default": "",
+          "description": "Precision of the attention-layer cache. Empty = preset value. f16 = best quality; q8_0 = half the memory, near-lossless; q4_0 = quarter memory, noticeably less precise at long range. The linear-attention state is always FP32.",
+          "options": [
+            {
+              "label": "Preset default",
+              "value": ""
+            },
+            {
+              "label": "f16",
+              "value": "f16"
+            },
+            {
+              "label": "q8_0",
+              "value": "q8_0"
+            },
+            {
+              "label": "q4_0",
+              "value": "q4_0"
+            }
+          ],
+          "advanced": true
+        }
+      },
+      {
+        "key": "PARALLEL",
+        "input": {
+          "name": "Parallel requests per worker",
+          "type": "number",
+          "default": 1,
+          "description": "Number of llama.cpp slots. The context is shared between slots, so 2 slots on a 256K preset give each request about 128K.",
+          "advanced": true
+        }
+      },
+      {
+        "key": "ENABLE_THINKING",
+        "input": {
+          "name": "Thinking mode by default",
+          "type": "boolean",
+          "default": false,
+          "description": "Qwen reasoning before answering. Slower and uses more tokens; can be overridden per request with chat_template_kwargs.enable_thinking.",
+          "trueValue": "true",
+          "falseValue": "false"
+        }
+      },
+      {
+        "key": "MAX_TOKENS_DEFAULT",
+        "input": {
+          "name": "Default max_tokens",
+          "type": "number",
+          "default": 2048,
+          "description": "Used when a request does not set max_tokens.",
+          "advanced": true
+        }
+      },
+      {
+        "key": "MODEL_REPO",
+        "input": {
+          "name": "Custom GGUF repo",
+          "type": "string",
+          "default": "",
+          "description": "Only for PRESET=custom. Hugging Face repo with GGUF files, e.g. unsloth/Qwen3.6-35B-A3B-GGUF.",
+          "advanced": true
+        }
+      },
+      {
+        "key": "MODEL_FILE",
+        "input": {
+          "name": "Custom GGUF file",
+          "type": "string",
+          "default": "",
+          "description": "Only for PRESET=custom. One .gguf file name inside the repo (multi-part files: give the first part).",
+          "advanced": true
+        }
+      },
+      {
+        "key": "MODEL_REVISION",
+        "input": {
+          "name": "Custom revision",
+          "type": "string",
+          "default": "",
+          "description": "Only for PRESET=custom. Commit SHA to pin. 'main' works but is not reproducible.",
+          "advanced": true
+        }
+      },
+      {
+        "key": "LOAD_TIMEOUT_S",
+        "input": {
+          "name": "Model load timeout (s)",
+          "type": "number",
+          "default": 900,
+          "description": "Max time for download + load on a cold start before the worker reports an error.",
+          "advanced": true
+        }
+      },
+      {
+        "key": "HF_TOKEN",
+        "input": {
+          "name": "Hugging Face token",
+          "type": "string",
+          "default": "",
+          "description": "Not needed for the built-in presets. Only for private/gated custom GGUF repos. Use a Runpod secret.",
+          "advanced": true
+        }
+      }
+    ]
+  }
+}
