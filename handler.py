@@ -151,6 +151,10 @@ async def handler(job: dict) -> AsyncIterator[Any]:
     except ConfigError as exc:
         yield _error("BAD_INPUT", str(exc), scfg, started, warnings)
         return
+    except Exception as exc:  # noqa: BLE001 - never crash the job on probing/parsing
+        log.error("config crashed: %s", redact(traceback.format_exc()))
+        yield _error("SETUP_CRASHED", f"{type(exc).__name__}: {exc}", scfg, started, warnings)
+        return
     warnings += scfg.warnings + rcfg.warnings
     if not has_volume():
         warnings.append(f"no network volume: weights are cached in {cache_root()} and re-downloaded on every "
